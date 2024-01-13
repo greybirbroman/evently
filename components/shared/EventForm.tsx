@@ -25,6 +25,7 @@ import { FileUploader } from './FileUploader';
 import { Checkbox } from '../ui/checkbox';
 import { useUploadThing } from '@/lib/uploadthing'
 import { useRouter } from 'next/navigation';
+import { createEvent } from '@/lib/actions/event.actions';
 
 type EventFormProps = {
   userId: string;
@@ -62,22 +63,22 @@ const EventForm = ({ userId, type }: EventFormProps) => {
       }
       uploadedImageUrl = uploadedImages[0].url
     }
-    // if(type === EVENT_TYPE_CREATE) {
-    //   try {
-    //     const newEvent = await createEvent({
-    //       userId,
-    //       event: { ...values, imageUrl: uploadedImageUrl },
-    //       path: '/profile'
-    //     })
-    //     if(newEvent) {
-    //       const id = newEvent._id
-    //       form.reset()
-    //       router.push(`/events/${id}`)
-    //     }
-    //   } catch (error) {
-    //     console.log(error)
-    //   }
-    // }
+    if(type === EVENT_TYPE_CREATE) {
+      try {
+        const newEvent = await createEvent({
+          userId,
+          event: { ...values, imageUrl: uploadedImageUrl },
+          path: '/profile'
+        })
+        if(newEvent) {
+          const id = newEvent._id
+          form.reset()
+          router.push(`/events/${id}`)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
   }
 
   return (
