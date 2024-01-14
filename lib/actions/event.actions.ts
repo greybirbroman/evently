@@ -2,6 +2,7 @@
 
 import {
   CreateEventParams,
+  UpdateEventParams,
   DeleteEventParams,
   GetAllEventsParams,
 } from '@/types';
@@ -89,6 +90,28 @@ export const getAllEvents = async ({
     handleError(error);
   }
 };
+
+export async function updateEvent({ userId, event, path }: UpdateEventParams) {
+  try {
+    await connectToDatabase()
+
+    const eventToUpdate = await Event.findById(event._id)
+    if (!eventToUpdate || eventToUpdate.organizer.toHexString() !== userId) {
+      throw new Error('Unauthorized or event not found')
+    }
+
+    const updatedEvent = await Event.findByIdAndUpdate(
+      event._id,
+      { ...event, category: event.categoryId },
+      { new: true }
+    )
+    revalidatePath(path)
+
+    return JSON.parse(JSON.stringify(updatedEvent))
+  } catch (error) {
+    handleError(error)
+  }
+}
 
 export const deleteEvent = async ({ eventId, path }: DeleteEventParams) => {
   try {
