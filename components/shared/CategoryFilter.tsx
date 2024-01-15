@@ -18,7 +18,7 @@ const CategoryFilter = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-	useEffect(() => {
+  useEffect(() => {
     const renderCategories = async () => {
       const categoriesFromServer = await getAllCategories();
 
@@ -28,23 +28,22 @@ const CategoryFilter = () => {
     renderCategories();
   }, []);
 
-
   const onSelectCategory = (category: string) => {
-		let newUrl = '';
-		    if (category && category !== 'All') {
-		      newUrl = formUrlQuery({
-		        params: searchParams.toString().trim(),
-		        key: 'category',
-		        value: category,
-		      });
-		    } else {
-		      newUrl = removeKeysFromQuery({
-		        params: searchParams.toString(),
-		        keysToRemove: ['category'],
-		      });
-		    }
-		    router.push(newUrl, { scroll: false });
-	};
+    let newUrl = '';
+    if (category && category !== 'All') {
+      newUrl = formUrlQuery({
+        params: searchParams.toString().trim(),
+        key: 'category',
+        value: category,
+      });
+    } else {
+      newUrl = removeKeysFromQuery({
+        params: searchParams.toString(),
+        keysToRemove: ['category'],
+      });
+    }
+    router.push(newUrl, { scroll: false });
+  };
 
   return (
     <Select onValueChange={(value: string) => onSelectCategory(value)}>
@@ -52,10 +51,14 @@ const CategoryFilter = () => {
         <SelectValue placeholder='Category' />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value='All' className='select-item p-regular-14'>All</SelectItem>
-				{categories.map((category) => (
-					<SelectItem value={category.name} key={category._id}>{category.name}</SelectItem>
-				))}
+        <SelectItem value='All' className='select-item p-regular-14'>
+          All
+        </SelectItem>
+        {categories.map((category) => (
+          <SelectItem value={category.name} key={category._id}>
+            {category.name}
+          </SelectItem>
+        ))}
       </SelectContent>
     </Select>
   );
